@@ -10,12 +10,12 @@ const FileUpload = () => {
   const [message, setMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
@@ -23,17 +23,17 @@ const FileUpload = () => {
     try {
       const res = await axios.post('/upload', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
         },
-        onUploadProgress: progressEvent => {
+        onUploadProgress: (progressEvent) => {
           setUploadPercentage(
             parseInt(
               Math.round((progressEvent.loaded * 100) / progressEvent.total)
             )
           );
-        }
+        },
       });
-      
+
       // Clear percentage
       setTimeout(() => setUploadPercentage(0), 10000);
 
@@ -48,7 +48,7 @@ const FileUpload = () => {
       } else {
         setMessage(err.response.data.msg);
       }
-      setUploadPercentage(0)
+      setUploadPercentage(0);
     }
   };
 
@@ -79,11 +79,53 @@ const FileUpload = () => {
       {uploadedFile ? (
         <div className='row mt-5'>
           <div className='col-md-6 m-auto'>
+            {/* File Name is in the object uploadedFile.fileName */}
             <h3 className='text-center'>{uploadedFile.fileName}</h3>
+            {/* and in the src we are giving it the path of our image */}
             <img style={{ width: '100%' }} src={uploadedFile.filePath} alt='' />
           </div>
         </div>
       ) : null}
+
+      <section className='vh-100' style={{ backgroundColor: '#fff' }}>
+        <div className='container py-5 h-100'>
+          <div className='row d-flex justify-content-center align-items-center h-100'>
+            <div className='col-12 col-md-8 col-lg-6 col-xl-5'>
+              <div
+                className='card shadow-2-strong'
+                style={{ borderRadius: '1rem' }}>
+                <div className='card-body p-5 text-center'>
+                  <h1 className='text-uppercase text-center mb-5'>
+                    Create Post
+                  </h1>
+                  <div className='form-outline mb-4'>
+                    <input
+                      type='text'
+                      id='caption'
+                      className='form-control form-control-lg'
+                    />
+                    <label className='form-label'>Write Caption</label>
+                  </div>
+                  <div className='form-outline mb-4'>
+                    <input
+                      type='text'
+                      id='caption'
+                      className='form-control form-control-lg'
+                    />
+                    <label className='form-label'>Location</label>
+                  </div>
+
+                  <button
+                    className='btn btn-primary btn-lg btn-block'
+                    type='submit'>
+                    Create
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </Fragment>
   );
 };
